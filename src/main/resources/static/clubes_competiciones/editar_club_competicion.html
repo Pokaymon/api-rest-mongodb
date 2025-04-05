@@ -1,89 +1,210 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Editar Relación Club-Competición</title>
+  <meta charset="UTF-8">
+  <title>Editar Relación Club - Competición</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+    }
+
+    body {
+      background: url('https://imgs.search.brave.com/6dQxJ4pYwVxH9V0Qp8Q0JYQYQYQYQYQYQYQY/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDYxOTg1/MzEuanBn') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.9), rgba(206, 17, 38, 0.9));
+      z-index: -1;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--blanco);
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      padding: 2rem;
+      color: var(--blanco);
+    }
+
+    .formulario {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .formulario h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--azul);
+    }
+
+    .btn-guardar {
+      background-color: var(--azul);
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      display: block;
+      margin: 0 auto;
+      transition: all 0.3s;
+    }
+
+    .btn-guardar:hover {
+      background-color: var(--rojo);
+      color: var(--amarillo);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 3rem;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    #mensaje {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
 </head>
 <body>
-    <h1>Editar Relación Club - Competición</h1>
 
-    <form id="formulario">
-        <label for="clubId">Club:</label>
-        <select id="clubId" required></select><br><br>
+  <header>
+    <div class="d-flex align-items-center">
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="listar_clubes_competiciones.html" class="btn btn-light"><i class="fas fa-arrow-left"></i> Volver</a>
+  </header>
 
-        <label for="competicionId">Competición:</label>
-        <select id="competicionId" required></select><br><br>
+  <div class="container">
+    <div class="formulario">
+      <h2>Editar Relación Club - Competición</h2>
+      <form id="formulario">
+        <div class="mb-3">
+          <label for="clubId" class="form-label">Club:</label>
+          <select id="clubId" class="form-select" required></select>
+        </div>
 
-        <button type="submit">Guardar Cambios</button>
-    </form>
+        <div class="mb-3">
+          <label for="competicionId" class="form-label">Competición:</label>
+          <select id="competicionId" class="form-select" required></select>
+        </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/clubes_competiciones/listar_clubes_competiciones.html'">
-        Regresar
-    </button>
+        <button type="submit" class="btn-guardar"><i class="fas fa-save"></i> Guardar Cambios</button>
+      </form>
+      <p id="mensaje"></p>
+    </div>
+  </div>
 
-    <p id="mensaje"></p>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
 
-        async function cargarDatosYSeleccionar() {
-            const [clubesRes, competicionesRes, relacionRes] = await Promise.all([
-                fetch('/api/clubes'),
-                fetch('/api/competiciones'),
-                fetch(`/api/clubes_competiciones/${id}`)
-            ]);
+    async function cargarDatosYSeleccionar() {
+      const [clubesRes, competicionesRes, relacionRes] = await Promise.all([
+        fetch('/api/clubes'),
+        fetch('/api/competiciones'),
+        fetch(`/api/clubes_competiciones/${id}`)
+      ]);
 
-            const clubes = await clubesRes.json();
-            const competiciones = await competicionesRes.json();
-            const relacion = await relacionRes.json();
+      const clubes = await clubesRes.json();
+      const competiciones = await competicionesRes.json();
+      const relacion = await relacionRes.json();
 
-            const clubSelect = document.getElementById('clubId');
-            const competicionSelect = document.getElementById('competicionId');
+      const clubSelect = document.getElementById('clubId');
+      const competicionSelect = document.getElementById('competicionId');
 
-            clubes.forEach(club => {
-                const option = document.createElement('option');
-                option.value = club.id;
-                option.textContent = club.nombre;
-                if (relacion.club.id === club.id) option.selected = true;
-                clubSelect.appendChild(option);
-            });
+      clubes.forEach(club => {
+        const option = document.createElement('option');
+        option.value = club.id;
+        option.textContent = club.nombre;
+        if (relacion.club.id === club.id) option.selected = true;
+        clubSelect.appendChild(option);
+      });
 
-            competiciones.forEach(comp => {
-                const option = document.createElement('option');
-                option.value = comp.id;
-                option.textContent = comp.nombre;
-                if (relacion.competicion.id === comp.id) option.selected = true;
-                competicionSelect.appendChild(option);
-            });
-        }
+      competiciones.forEach(comp => {
+        const option = document.createElement('option');
+        option.value = comp.id;
+        option.textContent = comp.nombre;
+        if (relacion.competicion.id === comp.id) option.selected = true;
+        competicionSelect.appendChild(option);
+      });
+    }
 
-        document.getElementById('formulario').addEventListener('submit', function(e) {
-            e.preventDefault();
+    document.getElementById('formulario').addEventListener('submit', function(e) {
+      e.preventDefault();
 
-            const clubId = document.getElementById('clubId').value;
-            const competicionId = document.getElementById('competicionId').value;
+      const clubId = document.getElementById('clubId').value;
+      const competicionId = document.getElementById('competicionId').value;
 
-            // Primero eliminamos la relación anterior
-            fetch(`/api/clubes_competiciones/${id}`, { method: 'DELETE' })
-                .then(() => {
-                    // Creamos una nueva con los datos actualizados
-                    return fetch(`/api/clubes_competiciones/${clubId}/${competicionId}`, {
-                        method: 'POST'
-                    });
-                })
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('mensaje').textContent = 'Relación actualizada correctamente.';
-                })
-                .catch(err => {
-                    document.getElementById('mensaje').textContent = 'Error al actualizar la relación.';
-                    console.error(err);
-                });
+      fetch(`/api/clubes_competiciones/${id}`, { method: 'DELETE' })
+        .then(() => {
+          return fetch(`/api/clubes_competiciones/${clubId}/${competicionId}`, {
+            method: 'POST'
+          });
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('mensaje').textContent = 'Relación actualizada correctamente.';
+          window.location.href = "/clubes_competiciones/listar_clubes_competiciones.html";
+	})
+        .catch(err => {
+          document.getElementById('mensaje').textContent = 'Error al actualizar la relación.';
+          console.error(err);
         });
+    });
 
-        cargarDatosYSeleccionar();
-    </script>
+    cargarDatosYSeleccionar();
+  </script>
 </body>
 </html>
 

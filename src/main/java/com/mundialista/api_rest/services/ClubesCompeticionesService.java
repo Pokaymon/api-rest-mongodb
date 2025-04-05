@@ -35,6 +35,12 @@ public class ClubesCompeticionesService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Club o Competición no encontrados");
         }
 
+	// Verificar si ya existe esa relación
+        Optional<ClubesCompeticiones> existente = clubesCompeticionesRepository.findByClubIdAndCompeticionId(clubId, competicionId);
+        if (existente.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El club ya está asociado a esta competición");
+        }
+
         ClubesCompeticiones nuevaRelacion = new ClubesCompeticiones(clubOpt.get(), competicionOpt.get());
         return clubesCompeticionesRepository.save(nuevaRelacion);
     }

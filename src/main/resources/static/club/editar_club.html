@@ -1,105 +1,285 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Editar Club</title>
+  <meta charset="UTF-8">
+  <title>Editar Club - Mundial 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+      --gris-oscuro: #333333;
+    }
+
+    body {
+      background-image: url('https://imgs.search.brave.com/6dQxJ4pYwVxH9V0Qp8Q0JYQYQYQYQYQYQYQYQ/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDYxOTg1/MzEuanBn');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.85), rgba(206, 17, 38, 0.85));
+      z-index: -1;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      margin-right: 15px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+    }
+
+    .title {
+      color: var(--blanco);
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .container {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: calc(100vh - 160px);
+    }
+
+    .section-title {
+      color: var(--blanco);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 3px;
+      background: linear-gradient(to right, var(--azul), var(--blanco), var(--rojo));
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--azul);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-control {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 15px;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 0.25rem rgba(0, 45, 98, 0.25);
+      outline: none;
+    }
+
+    .btn-submit {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-weight: bold;
+      border-radius: 50px;
+      transition: all 0.3s;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      color: var(--amarillo);
+    }
+
+    .btn-back {
+      background-color: var(--gris-oscuro);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+      background-color: #555;
+      color: var(--amarillo);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      padding: 1rem 0;
+      text-align: center;
+      border-top: 3px solid var(--amarillo);
+    }
+  </style>
 </head>
 <body>
-    <h1>Editar Club</h1>
+  <header>
+    <div class="logo-container">
+      <h1 class="title">MUNDIAL 2026</h1>
+    </div>
+    <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> Salir</a>
+  </header>
 
-    <form id="formulario-editar-club">
-        <label>Nombre del Club:</label>
-        <input type="text" id="nombre" required><br><br>
+  <div class="container">
+    <h1 class="section-title">Editar Club</h1>
+    <div class="form-container">
+      <form id="formulario-editar-club">
+        <div class="form-group">
+          <label class="form-label">Nombre del Club:</label>
+          <input type="text" id="nombre" class="form-control" required>
+        </div>
 
-        <label>Entrenador:</label>
-        <select id="entrenadorId" required></select><br><br>
+        <div class="form-group">
+          <label class="form-label">Entrenador:</label>
+          <select id="entrenadorId" class="form-control" required></select>
+        </div>
 
-        <label>Asociación:</label>
-        <select id="asociacionId" required></select><br><br>
+        <div class="form-group">
+          <label class="form-label">Asociación:</label>
+          <select id="asociacionId" class="form-control" required></select>
+        </div>
 
-        <button type="submit">Actualizar Club</button>
-    </form>
+        <a href="listar_clubes.html" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al Listado</a>
+        <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Actualizar Club</button>
+      </form>
+    </div>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/club/listar_clubes.html'">
-        Regresar
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get("id");
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
 
-        // Cargar entrenadores en el select
-        async function cargarEntrenadores(selectedId) {
-            const res = await fetch('/api/entrenadores');
-            const entrenadores = await res.json();
+    async function cargarEntrenadores(selectedId) {
+      const res = await fetch('/api/entrenadores');
+      const entrenadores = await res.json();
+      const select = document.getElementById("entrenadorId");
+      select.innerHTML = "";
 
-            const select = document.getElementById("entrenadorId");
-            select.innerHTML = ""; // Limpiar select
+      entrenadores.forEach(entrenador => {
+        const option = document.createElement("option");
+        option.value = entrenador.id;
+        option.textContent = entrenador.nombre;
+        if (entrenador.id == selectedId) option.selected = true;
+        select.appendChild(option);
+      });
+    }
 
-            entrenadores.forEach(entrenador => {
-                const option = document.createElement("option");
-                option.value = entrenador.id;
-                option.textContent = entrenador.nombre;
-                if (entrenador.id == selectedId) option.selected = true;
-                select.appendChild(option);
-            });
-        }
+    async function cargarAsociaciones(selectedId) {
+      const res = await fetch('/api/asociaciones');
+      const asociaciones = await res.json();
+      const select = document.getElementById("asociacionId");
+      select.innerHTML = "";
 
-        // Cargar asociaciones en el select
-        async function cargarAsociaciones(selectedId) {
-            const res = await fetch('/api/asociaciones');
-            const asociaciones = await res.json();
+      asociaciones.forEach(asociacion => {
+        const option = document.createElement("option");
+        option.value = asociacion.id;
+        option.textContent = asociacion.nombre;
+        if (asociacion.id == selectedId) option.selected = true;
+        select.appendChild(option);
+      });
+    }
 
-            const select = document.getElementById("asociacionId");
-            select.innerHTML = ""; // Limpiar select
+    async function cargarClub() {
+      const response = await fetch(`/api/clubes/${id}`);
+      if (response.ok) {
+        const club = await response.json();
+        document.getElementById("nombre").value = club.nombre;
+        await cargarEntrenadores(club.entrenador?.id);
+        await cargarAsociaciones(club.asociacion?.id);
+      } else {
+        alert("Club no encontrado.");
+        window.location.href = "listar_clubes.html";
+      }
+    }
 
-            asociaciones.forEach(asociacion => {
-                const option = document.createElement("option");
-                option.value = asociacion.id;
-                option.textContent = asociacion.nombre;
-                if (asociacion.id == selectedId) option.selected = true;
-                select.appendChild(option);
-            });
-        }
+    document.getElementById("formulario-editar-club").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-        async function cargarClub() {
-            const response = await fetch(`/api/clubes/${id}`);
-            if (response.ok) {
-                const club = await response.json();
-                document.getElementById("nombre").value = club.nombre;
-                await cargarEntrenadores(club.entrenador?.id);
-                await cargarAsociaciones(club.asociacion?.id);
-            } else {
-                alert("Club no encontrado.");
-                window.location.href = "listar_clubes.html";
-            }
-        }
+      const clubActualizado = {
+        nombre: document.getElementById("nombre").value,
+        entrenador: { id: document.getElementById("entrenadorId").value },
+        asociacion: { id: document.getElementById("asociacionId").value }
+      };
 
-        document.getElementById("formulario-editar-club").addEventListener("submit", async function (e) {
-            e.preventDefault();
+      const response = await fetch(`/api/clubes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(clubActualizado)
+      });
 
-            const clubActualizado = {
-                nombre: document.getElementById("nombre").value,
-                entrenador: { id: document.getElementById("entrenadorId").value },
-                asociacion: { id: document.getElementById("asociacionId").value }
-            };
+      if (response.ok) {
+        alert("Club actualizado correctamente.");
+        window.location.href = "listar_clubes.html";
+      } else {
+        alert("Error al actualizar el club.");
+      }
+    });
 
-            const response = await fetch(`/api/clubes/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(clubActualizado)
-            });
-
-            if (response.ok) {
-                alert("Club actualizado correctamente.");
-                window.location.href = "listar_clubes.html";
-            } else {
-                alert("Error al actualizar el club.");
-            }
-        });
-
-        cargarClub();
-    </script>
+    cargarClub();
+  </script>
 </body>
 </html>
 

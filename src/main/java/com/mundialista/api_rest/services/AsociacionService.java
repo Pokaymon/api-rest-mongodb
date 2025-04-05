@@ -40,19 +40,13 @@ public class AsociacionService {
 
     // Actualizar una asociación existente
     public Asociacion actualizarAsociacion(String id, Asociacion asociacion) {
-        Optional<Asociacion> asociacionExistenteOpt = asociacionRepository.findById(id);
-
-        if (asociacionExistenteOpt.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Asociación no encontrada");
+        Optional<Asociacion> existente = asociacionRepository.findByNombre(asociacion.getNombre());
+        if (existente.isPresent() && !existente.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otra asociación con ese nombre");
         }
 
-        Asociacion asociacionExistente = asociacionExistenteOpt.get();
-        asociacionExistente.setNombre(asociacion.getNombre());
-        asociacionExistente.setPais(asociacion.getPais());
-        asociacionExistente.setPresidente(asociacion.getPresidente());
-        asociacionExistente.setSiglas(asociacion.getSiglas());
-
-        return asociacionRepository.save(asociacionExistente);
+        asociacion.setId(id);
+        return asociacionRepository.save(asociacion);
     }
 
     // Eliminar una asociación

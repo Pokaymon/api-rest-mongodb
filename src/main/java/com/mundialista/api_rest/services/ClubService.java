@@ -38,6 +38,13 @@ public class ClubService {
 
     // Crear un nuevo club
     public Club crearClub(Club club) {
+
+        // Verificar si ya existe un club con el mismo nombre
+        Optional<Club> existente = clubRepository.findByNombreIgnoreCase(club.getNombre().trim());
+        if (existente.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un club con ese nombre");
+        }
+
         // Verificar existencia del entrenador
 
 	Optional<Entrenador> entrenadorOpt = entrenadorRepository.findById(club.getEntrenador().getId());
@@ -68,6 +75,13 @@ public class ClubService {
         }
 
         Club clubExistente = clubExistenteOpt.get();
+
+
+	// Verificar si el nuevo nombre ya existe en otro club
+        Optional<Club> otroClub = clubRepository.findByNombreIgnoreCase(club.getNombre().trim());
+        if (otroClub.isPresent() && !otroClub.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otro club con ese nombre");
+        }
 
 	// Actualizar campos básicos
 	clubExistente.setNombre(club.getNombre());

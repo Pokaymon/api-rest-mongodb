@@ -1,68 +1,196 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Listado de Clubes</title>
+  <meta charset="UTF-8">
+  <title>Listado de Clubes - Mundial 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+      --gris: #f0f0f0;
+    }
+
+    body {
+      background-image: url('https://imgs.search.brave.com/6dQxJ4pYwVxH9V0Qp8Q0JYQYQYQYQYQYQYQYQ/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDYxOTg1/MzEuanBn');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 45, 98, 0.9), rgba(206, 17, 38, 0.9));
+      z-index: -1;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--blanco);
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      padding: 2rem;
+      color: var(--blanco);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+      color: var(--blanco);
+    }
+
+    .table-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-add {
+      background-color: var(--azul);
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+
+    .btn-add:hover {
+      background-color: var(--rojo);
+      color: var(--amarillo);
+      transform: translateY(-2px);
+    }
+
+    .btn-action {
+      background: none;
+      border: none;
+      color: var(--azul);
+      font-weight: bold;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: all 0.3s;
+    }
+
+    .btn-action:hover {
+      color: var(--rojo);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 3rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>Listado de Clubes</h1>
-    <a href="nuevo_club.html">Registrar nuevo Club</a>
-    <br><br>
 
-    <table border="1">
-        <thead>
+  <header>
+    <div class="d-flex align-items-center">
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="/" class="btn-add"><i class="fas fa-home"></i> Inicio</a>
+  </header>
+
+  <div class="container">
+    <h1 class="section-title">Listado de Clubes</h1>
+
+    <div class="table-container">
+      <a href="nuevo_club.html" class="btn-add"><i class="fas fa-plus"></i> Registrar nuevo Club</a>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+          <thead class="table-dark">
             <tr>
-                <th>Nombre</th>
-                <th>Entrenador</th>
-                <th>Asociación</th>
-                <th>Acciones</th>
+              <th>Nombre</th>
+              <th>Entrenador</th>
+              <th>Asociación</th>
+              <th>Acciones</th>
             </tr>
-        </thead>
-        <tbody id="tabla-clubes"></tbody>
-    </table>
+          </thead>
+          <tbody id="tabla-clubes"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/'">
-        Volver al Inicio
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        async function cargarClubes() {
-            const response = await fetch("/api/clubes");
-            const clubes = await response.json();
-            const tabla = document.getElementById("tabla-clubes");
+  <script>
+    async function cargarClubes() {
+      const response = await fetch("/api/clubes");
+      const clubes = await response.json();
+      const tabla = document.getElementById("tabla-clubes");
 
-            clubes.forEach(club => {
-                const fila = document.createElement("tr");
-                fila.innerHTML = `
-                    <td>${club.nombre}</td>
-                    <td>${club.entrenador?.nombre || 'Sin entrenador'}</td>
-                    <td>${club.asociacion?.nombre || 'Sin asociación'}</td>
-                    <td>
-                        <a href="editar_club.html?id=${club.id}">Editar</a> |
-                        <button onclick="eliminarClub('${club.id}')">Eliminar</button>
-                    </td>
-                `;
-                tabla.appendChild(fila);
-            });
-        }
+      clubes.forEach(club => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${club.nombre}</td>
+          <td>${club.entrenador?.nombre || 'Sin entrenador'}</td>
+          <td>${club.asociacion?.nombre || 'Sin asociación'}</td>
+          <td>
+            <a href="editar_club.html?id=${club.id}" class="btn-action"><i class="fas fa-edit"></i> Editar</a>
+            <button onclick="eliminarClub('${club.id}')" class="btn-action"><i class="fas fa-trash-alt"></i> Eliminar</button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+    }
 
-        async function eliminarClub(id) {
-            if (!confirm("¿Estás seguro de eliminar este club?")) return;
+    async function eliminarClub(id) {
+      if (!confirm("¿Estás seguro de eliminar este club?")) return;
 
-            const response = await fetch(`/api/clubes/${id}`, {
-                method: "DELETE"
-            });
+      const response = await fetch(`/api/clubes/${id}`, {
+        method: "DELETE"
+      });
 
-            if (response.ok) {
-                alert("Club eliminado.");
-                location.reload();
-            } else {
-                alert("Error al eliminar el club.");
-            }
-        }
+      if (response.ok) {
+        alert("Club eliminado.");
+        location.reload();
+      } else {
+        alert("Error al eliminar el club.");
+      }
+    }
 
-        cargarClubes();
-    </script>
+    cargarClubes();
+  </script>
 </body>
 </html>
 
