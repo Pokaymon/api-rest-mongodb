@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Competición</title>
+</head>
+<body>
+    <h1>Registrar Nueva Competición</h1>
+    <form id="formNuevaCompeticion">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br><br>
+
+        <label>Fecha Inicio:</label>
+        <input type="date" name="fechaInicio" required><br><br>
+
+        <label>Fecha Fin:</label>
+        <input type="date" name="fechaFin" required><br><br>
+
+        <label>Monto Premio:</label>
+        <input type="number" name="montoPremio" step="0.01" required><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        document.getElementById('formNuevaCompeticion').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const competicion = {
+                nombre: form.nombre.value,
+                fechaInicio: form.fechaInicio.value,
+                fechaFin: form.fechaFin.value,
+                montoPremio: parseFloat(form.montoPremio.value)
+            };
+
+            fetch('/api/competiciones', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(competicion)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Competición registrada con éxito');
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>
+

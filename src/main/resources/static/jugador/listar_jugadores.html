@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Jugadores</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        button {
+            margin-right: 5px;
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jugadores Registrados</h1>
+    <table id="tablaJugadores">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Dorsal</th>
+                <th>Posición</th>
+                <th>Club</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se cargarán los jugadores -->
+        </tbody>
+    </table>
+
+<script>
+    const URL_BASE = 'https://mundialista.ddnsfree.com:8129';
+
+    // Cargar los jugadores desde la API
+    fetch('/api/jugadores')
+        .then(res => res.json())
+        .then(jugadores => {
+            const tbody = document.querySelector('#tablaJugadores tbody');
+            jugadores.forEach(j => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${j.nombre}</td>
+                    <td>${j.apellido}</td>
+                    <td>${j.dorsal}</td>
+                    <td>${j.posicion}</td>
+                    <td>${j.club?.nombre || 'Sin club'}</td>
+                    <td>
+                        <button onclick="editarJugador('${j.id}')">Editar</button>
+                        <button onclick="eliminarJugador('${j.id}')">Eliminar</button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => {
+            console.error('Error al cargar jugadores:', err);
+            alert('No se pudieron cargar los jugadores.');
+        });
+
+    function editarJugador(id) {
+        window.location.href = `${URL_BASE}/jugador/editar_jugador.html?id=${id}`;
+    }
+
+    function eliminarJugador(id) {
+        if (!confirm('¿Estás seguro de que deseas eliminar este jugador?')) return;
+
+        fetch(`/api/jugadores/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Error al eliminar el jugador');
+            alert('Jugador eliminado correctamente');
+            location.reload();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('No se pudo eliminar el jugador.');
+        });
+    }
+</script>
+</body>
+</html>
+

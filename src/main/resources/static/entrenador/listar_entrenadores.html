@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Entrenadores</title>
+</head>
+<body>
+    <h1>Entrenadores Registrados</h1>
+    <a href="nuevo_entrenador.html">Agregar Nuevo Entrenador</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Nacionalidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-entrenadores"></tbody>
+    </table>
+
+    <script>
+        function cargarEntrenadores() {
+            fetch("/api/entrenadores")
+                .then(res => res.json())
+                .then(data => {
+                    const tabla = document.getElementById("tabla-entrenadores");
+                    tabla.innerHTML = "";
+                    data.forEach(entrenador => {
+                        const fila = `
+                            <tr>
+                                <td>${entrenador.nombre}</td>
+                                <td>${entrenador.apellido}</td>
+                                <td>${entrenador.edad}</td>
+                                <td>${entrenador.nacionalidad}</td>
+                                <td>
+                                    <a href="editar_entrenador.html?id=${entrenador.id}">Editar</a> |
+                                    <button onclick="eliminarEntrenador('${entrenador.id}')">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                        tabla.innerHTML += fila;
+                    });
+                });
+        }
+
+        function eliminarEntrenador(id) {
+            if (confirm("¿Estás seguro de eliminar este entrenador?")) {
+                fetch(`/api/entrenadores/${id}`, { method: "DELETE" })
+                    .then(() => {
+                        alert("Entrenador eliminado");
+                        cargarEntrenadores();
+                    });
+            }
+        }
+
+        window.onload = cargarEntrenadores;
+    </script>
+</body>
+</html>
+

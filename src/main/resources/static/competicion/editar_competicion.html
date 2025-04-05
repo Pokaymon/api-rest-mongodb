@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Competición</title>
+</head>
+<body>
+    <h1>Editar Competición</h1>
+    <form id="formEditarCompeticion">
+        <input type="hidden" name="id">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br><br>
+
+        <label>Fecha Inicio:</label>
+        <input type="date" name="fechaInicio" required><br><br>
+
+        <label>Fecha Fin:</label>
+        <input type="date" name="fechaFin" required><br><br>
+
+        <label>Monto Premio:</label>
+        <input type="number" name="montoPremio" step="0.01" required><br><br>
+
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        fetch(`/api/competiciones/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                const form = document.getElementById('formEditarCompeticion');
+                form.id.value = data.id;
+                form.nombre.value = data.nombre;
+                form.fechaInicio.value = data.fechaInicio.split('T')[0];
+                form.fechaFin.value = data.fechaFin.split('T')[0];
+                form.montoPremio.value = data.montoPremio;
+            });
+
+        document.getElementById('formEditarCompeticion').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const competicion = {
+                id: form.id.value,
+                nombre: form.nombre.value,
+                fechaInicio: form.fechaInicio.value,
+                fechaFin: form.fechaFin.value,
+                montoPremio: parseFloat(form.montoPremio.value)
+            };
+
+            fetch(`/api/competiciones/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(competicion)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Competición actualizada con éxito');
+                window.location.href = "listar_competiciones.html";
+            });
+        });
+    </script>
+</body>
+</html>
+

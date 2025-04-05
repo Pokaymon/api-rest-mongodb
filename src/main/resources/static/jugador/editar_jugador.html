@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Jugador</title>
+</head>
+<body>
+    <h1>Editar Jugador</h1>
+
+    <form id="jugadorForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" required><br><br>
+
+        <label for="dorsal">Dorsal:</label>
+        <input type="number" id="dorsal" required><br><br>
+
+        <label for="posicion">Posición:</label>
+        <input type="text" id="posicion" required><br><br>
+
+        <label for="club">Club:</label>
+        <select id="club" required>
+            <option value="">Seleccione un club</option>
+        </select><br><br>
+
+        <button type="submit">Actualizar Jugador</button>
+    </form>
+
+<script>
+    const jugadorId = new URLSearchParams(window.location.search).get('id'); // ID desde la URL
+
+    if (!jugadorId) {
+        alert('No se proporcionó un ID de jugador.');
+        window.location.href = '/'; // redirige si no hay ID
+    }
+
+    // 1. Cargar clubes
+    fetch('/api/clubes')
+        .then(res => res.json())
+        .then(clubes => {
+            const select = document.getElementById('club');
+            clubes.forEach(club => {
+                const option = document.createElement('option');
+                option.value = club.id;
+                option.textContent = club.nombre;
+                select.appendChild(option);
+            });
+
+            // 2. Luego de cargar clubes, cargar datos del jugador
+            return fetch(`/api/jugadores/${jugadorId}`);
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Jugador no encontrado');
+            return res.json();
+        })
+        .then(jugador => {
+            document.getElementById('nombre').value = jugador.nombre;
+            document.getElementById('apellido').value = jugador.apellido;
+            document.getElementById('dorsal').value = jugador.dorsal;
+            document.getElementById('posicion').value = jugador.posicion;
+            document.getElementById('club').value = jugador.club?.id || '';
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error al cargar los datos del jugador');
+        });
+
+    // 3. Enviar actualización
+    document.getElementById('jugadorForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const data = {
+            nombre: document.getElementById('nombre').value,
+            apellido: document.getElementById('apellido').value,
+            dorsal: parseInt(document.getElementById('dorsal').value),
+            posicion: document.getElementById('posicion').value,
+            club: {
+                id: document.getElementById('club').value
+            }
+        };
+
+        fetch(`/api/jugadores/${jugadorId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Error al actualizar');
+            return res.json();
+        })
+        .then(jugador => {
+            alert('Jugador actualizado exitosamente');
+            window.location.href = '/jugador/listar_jugadores.html'; // redirige si quieres
+        })
+        .catch(err => {
+            console.error(err);
+            alert('No se pudo actualizar el jugador');
+        });
+    });
+</script>
+</body>
+</html>
+

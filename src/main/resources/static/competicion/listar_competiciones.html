@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Competiciones</title>
+</head>
+<body>
+    <h1>Competiciones Registradas</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Monto Premio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaCompeticiones"></tbody>
+    </table>
+
+    <script>
+        function cargarCompeticiones() {
+            fetch('/api/competiciones')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('tablaCompeticiones');
+                    tbody.innerHTML = '';
+                    data.forEach(c => {
+                        const fila = `
+                            <tr>
+                                <td>${c.nombre}</td>
+                                <td>${new Date(c.fechaInicio).toLocaleDateString()}</td>
+                                <td>${new Date(c.fechaFin).toLocaleDateString()}</td>
+                                <td>${c.montoPremio}</td>
+                                <td>
+                                    <a href="editar_competicion.html?id=${c.id}">Editar</a>
+                                    <button onclick="eliminar('${c.id}')">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += fila;
+                    });
+                });
+        }
+
+        function eliminar(id) {
+            if (confirm("¿Seguro que quieres eliminar esta competición?")) {
+                fetch(`/api/competiciones/${id}`, { method: 'DELETE' })
+                    .then(() => {
+                        alert('Eliminado correctamente');
+                        cargarCompeticiones();
+                    });
+            }
+        }
+
+        window.onload = cargarCompeticiones;
+    </script>
+</body>
+</html>
+
