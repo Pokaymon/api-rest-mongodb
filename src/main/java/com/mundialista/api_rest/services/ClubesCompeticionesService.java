@@ -39,6 +39,11 @@ public class ClubesCompeticionesService {
         return clubesCompeticionesRepository.save(nuevaRelacion);
     }
 
+
+    public ClubesCompeticiones obtenerPorId(String id) {
+        return clubesCompeticionesRepository.findById(id).orElse(null);
+    }
+
     // Obtener todas las relaciones
     public List<ClubesCompeticiones> obtenerTodas() {
         return clubesCompeticionesRepository.findAll();

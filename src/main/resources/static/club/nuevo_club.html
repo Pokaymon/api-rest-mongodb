@@ -11,16 +11,51 @@
         <label>Nombre del Club:</label>
         <input type="text" id="nombre" required><br><br>
 
-        <label>ID del Entrenador:</label>
-        <input type="text" id="entrenadorId" required><br><br>
+        <label>Entrenador:</label>
+        <select id="entrenadorId" required></select><br><br>
 
-        <label>ID de la Asociación:</label>
-        <input type="text" id="asociacionId" required><br><br>
+        <label>Asociación:</label>
+        <select id="asociacionId" required></select><br><br>
 
         <button type="submit">Guardar Club</button>
     </form>
 
     <script>
+        // Cargar entrenadores en el select
+        async function cargarEntrenadores() {
+            const res = await fetch('/api/entrenadores');
+            const entrenadores = await res.json();
+
+            const select = document.getElementById("entrenadorId");
+            entrenadores.forEach(entrenador => {
+                const option = document.createElement("option");
+                option.value = entrenador.id;
+                option.textContent = entrenador.nombre; // o `${entrenador.nombre} ${entrenador.apellido}`
+                select.appendChild(option);
+            });
+        }
+
+        // Cargar asociaciones en el select
+        async function cargarAsociaciones() {
+            const res = await fetch('/api/asociaciones');
+            const asociaciones = await res.json();
+
+            const select = document.getElementById("asociacionId");
+            asociaciones.forEach(asociacion => {
+                const option = document.createElement("option");
+                option.value = asociacion.id;
+                option.textContent = asociacion.nombre;
+                select.appendChild(option);
+            });
+        }
+
+        // Llamar a ambas funciones al cargar la página
+        window.onload = () => {
+            cargarEntrenadores();
+            cargarAsociaciones();
+        };
+
+        // Manejo del formulario
         document.getElementById("formulario-club").addEventListener("submit", async function (e) {
             e.preventDefault();
 

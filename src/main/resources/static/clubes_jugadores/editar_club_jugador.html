@@ -8,11 +8,11 @@
   <h1>Editar Relación Club - Jugador</h1>
 
   <form id="form-editar">
-    <label for="clubId">Nuevo Club ID:</label>
-    <input type="text" id="clubId" required><br><br>
+    <label for="clubId">Nuevo Club:</label>
+    <select id="clubId" required></select><br><br>
 
-    <label for="jugadorId">Nuevo Jugador ID:</label>
-    <input type="text" id="jugadorId" required><br><br>
+    <label for="jugadorId">Nuevo Jugador:</label>
+    <select id="jugadorId" required></select><br><br>
 
     <button type="submit">Actualizar</button>
   </form>
@@ -25,19 +25,43 @@
     const clubIdOriginal = params.get("clubId");
     const jugadorIdOriginal = params.get("jugadorId");
 
-    document.getElementById("clubId").value = clubIdOriginal;
-    document.getElementById("jugadorId").value = jugadorIdOriginal;
+    const clubSelect = document.getElementById("clubId");
+    const jugadorSelect = document.getElementById("jugadorId");
+
+    // Cargar clubes
+    fetch("/api/clubes")
+      .then(res => res.json())
+      .then(clubes => {
+        clubes.forEach(club => {
+          const option = document.createElement("option");
+          option.value = club.id;
+          option.text = club.nombre;
+          if (club.id === clubIdOriginal) option.selected = true;
+          clubSelect.appendChild(option);
+        });
+      });
+
+    // Cargar jugadores
+    fetch("/api/jugadores")
+      .then(res => res.json())
+      .then(jugadores => {
+        jugadores.forEach(jugador => {
+          const option = document.createElement("option");
+          option.value = jugador.id;
+          option.text = jugador.nombre;
+          if (jugador.id === jugadorIdOriginal) option.selected = true;
+          jugadorSelect.appendChild(option);
+        });
+      });
 
     document.getElementById("form-editar").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const nuevoClubId = document.getElementById("clubId").value;
-      const nuevoJugadorId = document.getElementById("jugadorId").value;
+      const nuevoClubId = clubSelect.value;
+      const nuevoJugadorId = jugadorSelect.value;
 
-      // Primero eliminamos la relación actual
       fetch(`/api/clubes_jugadores/${id}`, { method: "DELETE" })
         .then(() => {
-          // Luego creamos la nueva relación
           return fetch(`/api/clubes_jugadores/${nuevoClubId}/${nuevoJugadorId}`, {
             method: "POST"
           });

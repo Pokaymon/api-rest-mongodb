@@ -22,6 +22,17 @@ public class ClubesCompeticionesController {
         return ResponseEntity.ok(clubesCompeticionesService.crearRelacion(clubId, competicionId));
     }
 
+    // Obtener una relación por su ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ClubesCompeticiones> obtenerPorId(@PathVariable String id) {
+        ClubesCompeticiones relacion = clubesCompeticionesService.obtenerPorId(id);
+        if (relacion != null) {
+            return ResponseEntity.ok(relacion);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Obtener todas las relaciones
     @GetMapping
     public ResponseEntity<List<ClubesCompeticiones>> obtenerTodas() {

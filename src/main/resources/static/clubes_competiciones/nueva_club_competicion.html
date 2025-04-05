@@ -8,11 +8,11 @@
     <h1>Crear Nueva Relación Club - Competición</h1>
 
     <form id="formulario">
-        <label for="clubId">ID del Club:</label>
-        <input type="text" id="clubId" required><br><br>
+        <label for="clubId">Club:</label>
+        <select id="clubId" required></select><br><br>
 
-        <label for="competicionId">ID de la Competición:</label>
-        <input type="text" id="competicionId" required><br><br>
+        <label for="competicionId">Competición:</label>
+        <select id="competicionId" required></select><br><br>
 
         <button type="submit">Crear Relación</button>
     </form>
@@ -20,6 +20,33 @@
     <p id="mensaje"></p>
 
     <script>
+        async function cargarOpciones() {
+            const [clubesRes, competicionesRes] = await Promise.all([
+                fetch('/api/clubes'),
+                fetch('/api/competiciones')
+            ]);
+
+            const clubes = await clubesRes.json();
+            const competiciones = await competicionesRes.json();
+
+            const clubSelect = document.getElementById('clubId');
+            const competicionSelect = document.getElementById('competicionId');
+
+            clubes.forEach(club => {
+                const option = document.createElement('option');
+                option.value = club.id;
+                option.textContent = club.nombre;
+                clubSelect.appendChild(option);
+            });
+
+            competiciones.forEach(comp => {
+                const option = document.createElement('option');
+                option.value = comp.id;
+                option.textContent = comp.nombre;
+                competicionSelect.appendChild(option);
+            });
+        }
+
         document.getElementById('formulario').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -38,6 +65,8 @@
                 console.error(err);
             });
         });
+
+        cargarOpciones();
     </script>
 </body>
 </html>

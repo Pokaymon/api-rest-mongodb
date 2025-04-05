@@ -3,6 +3,7 @@ package com.mundialista.api_rest.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Document(collection = "competiciones")
 public class Competicion {
@@ -10,7 +11,10 @@ public class Competicion {
     @Id
     private String id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date fechaInicio;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date fechaFin;
     private double montoPremio;
     private String nombre;
