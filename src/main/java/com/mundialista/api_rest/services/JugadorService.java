@@ -34,46 +34,68 @@ public class JugadorService {
 
     // Crear un nuevo jugador
     public Jugador crearJugador(Jugador jugador) {
+
+        // Verificar si ya existe un jugador con el mismo nombre y apellido
+        Optional<Jugador> jugadorExistente = jugadorRepository.findByNombreAndApellido(
+            jugador.getNombre().trim(),
+            jugador.getApellido().trim()
+        );
+
+        if (jugadorExistente.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Ya existe un jugador con ese nombre y apellido");
+        }
+
         // Verificar existencia del club
-    Optional<Club> clubOpt = clubRepository.findById(jugador.getClub().getId());
-    
-    if (clubOpt.isPresent()) {
-        // Si el club existe, lo asociamos al jugador
-        jugador.setClub(clubOpt.get());
-        return jugadorRepository.save(jugador);
-    } else {
-        // Si el club no existe, lanzamos excepción
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El Club con el ID proporcionado no existe");
-    }
+        Optional<Club> clubOpt = clubRepository.findById(jugador.getClub().getId());
+
+        if (clubOpt.isPresent()) {
+            // Si el club existe, lo asociamos al jugador
+            jugador.setClub(clubOpt.get());
+            return jugadorRepository.save(jugador);
+        } else {
+            // Si el club no existe, lanzamos excepción
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El Club con el ID proporcionado no existe");
+        }
     }
 
     // Actualizar un jugador existente
     public Jugador actualizarJugador(String id, Jugador jugador) {
+
+        // Verificar si ya existe un jugador con el mismo nombre y apellido
+        Optional<Jugador> jugadorExistente = jugadorRepository.findByNombreAndApellido(
+            jugador.getNombre().trim(),
+            jugador.getApellido().trim()
+        );
+
+        if (jugadorExistente.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Ya existe un jugador con ese nombre y apellido");
+        }
+
         Optional<Jugador> jugadorExistenteOpt = jugadorRepository.findById(id);
 
-    if (jugadorExistenteOpt.isEmpty()) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Jugador no encontrado");
-    }
-
-    Jugador jugadorExistente = jugadorExistenteOpt.get();
-
-    // Actualizar campos básicos
-    jugadorExistente.setNombre(jugador.getNombre());
-    jugadorExistente.setApellido(jugador.getApellido());
-    jugadorExistente.setDorsal(jugador.getDorsal());
-    jugadorExistente.setPosicion(jugador.getPosicion());
-
-    // Verificar y actualizar el club (si no viene null)
-    if (jugador.getClub() != null && jugador.getClub().getId() != null) {
-        Optional<Club> clubOpt = clubRepository.findById(jugador.getClub().getId());
-        if (clubOpt.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El Club con el ID proporcionado no existe");
+        if (jugadorExistenteOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Jugador no encontrado");
         }
-        jugadorExistente.setClub(clubOpt.get());
-    }
 
-    return jugadorRepository.save(jugadorExistente);
-    }
+        Jugador jugadorExistente = jugadorExistenteOpt.get();
+
+        // Actualizar campos básicos
+        jugadorExistente.setNombre(jugador.getNombre());
+        jugadorExistente.setApellido(jugador.getApellido());
+        jugadorExistente.setDorsal(jugador.getDorsal());
+        jugadorExistente.setPosicion(jugador.getPosicion());
+
+        // Verificar y actualizar el club (si no viene null)
+        if (jugador.getClub() != null && jugador.getClub().getId() != null) {
+            Optional<Club> clubOpt = clubRepository.findById(jugador.getClub().getId());
+            if (clubOpt.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El Club con el ID proporcionado no existe");
+            }
+            jugadorExistente.setClub(clubOpt.get());
+        }
+
+        return jugadorRepository.save(jugadorExistente);
+        }
 
     // Eliminar un jugador
     public void eliminarJugador(String id) {

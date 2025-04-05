@@ -21,6 +21,10 @@
         <tbody id="tabla-clubes"></tbody>
     </table>
 
+    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/'">
+        Volver al Inicio
+    </button>
+
     <script>
         async function cargarClubes() {
             const response = await fetch("/api/clubes");

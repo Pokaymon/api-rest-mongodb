@@ -27,6 +27,10 @@
         <button type="submit">Guardar</button>
     </form>
 
+    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/jugador/listar_jugadores.html'">
+        Regresar
+    </button>
+
     <script>
         fetch('/api/clubes')
             .then(res => res.json())
@@ -60,6 +64,7 @@
                 if (res.ok) {
                     alert("Jugador registrado con éxito");
                     document.getElementById("form-nuevo").reset();
+		    window.location.href = "listar_jugadores.html";
                 } else {
                     alert("Error al registrar jugador");
                 }
