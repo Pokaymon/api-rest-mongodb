@@ -11,7 +11,7 @@ public class Jugador {
     private String id; // MongoDB crea un id único automáticamente
     private String nombre;
     private String apellido;
-    private int dorsal;
+    private Integer dorsal;
     private String posicion;
 
     @DBRef
@@ -22,7 +22,7 @@ public class Jugador {
     }
 
     // Constructor con parámetros
-    public Jugador(String nombre, String apellido, int dorsal, String posicion, Club club) {
+    public Jugador(String nombre, String apellido, Integer dorsal, String posicion, Club club) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dorsal = dorsal;
@@ -55,11 +55,11 @@ public class Jugador {
         this.apellido = apellido;
     }
 
-    public int getDorsal() {
+    public Integer getDorsal() {
         return dorsal;
     }
 
-    public void setDorsal(int dorsal) {
+    public void setDorsal(Integer dorsal) {
         this.dorsal = dorsal;
     }
 

@@ -1,63 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Editar Entrenador</title>
+  <meta charset="UTF-8" />
+  <title>Editar Entrenador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--azul), var(--rojo));
+      color: var(--blanco);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--blanco);
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: black;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+      max-width: 600px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 2rem;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .btn-actualizar {
+      background-color: var(--amarillo);
+      font-weight: bold;
+      color: black;
+      border-radius: 20px;
+    }
+
+    .btn-actualizar:hover {
+      background-color: var(--blanco);
+    }
+  </style>
 </head>
 <body>
-    <h1>Editar Entrenador</h1>
+
+  <header>
+    <div class="d-flex align-items-center">
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="index.html" class="btn btn-light"><i class="fas fa-home"></i> Inicio</a>
+  </header>
+
+  <div class="container">
+    <h2 class="mb-4"><i class="fas fa-user-edit"></i> Editar Entrenador</h2>
     <form id="form-editar">
-        <label>Nombre:</label>
-        <input type="text" id="nombre"><br><br>
-
-        <label>Apellido:</label>
-        <input type="text" id="apellido"><br><br>
-
-        <label>Edad:</label>
-        <input type="number" id="edad"><br><br>
-
-        <label>Nacionalidad:</label>
-        <input type="text" id="nacionalidad"><br><br>
-
-        <button type="submit">Actualizar</button>
+      <div class="mb-3">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" class="form-control" disabled />
+      </div>
+      <div class="mb-3">
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" class="form-control" disabled />
+      </div>
+      <div class="mb-3">
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" class="form-control" required />
+      </div>
+      <div class="mb-4">
+        <label for="nacionalidad">Nacionalidad:</label>
+        <input type="text" id="nacionalidad" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-actualizar w-100">
+        <i class="fas fa-save"></i> Actualizar
+      </button>
     </form>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/entrenador/listar_entrenadores.html'">
-        Regresar
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
 
-        fetch(`/api/entrenadores/${id}`)
-            .then(res => res.json())
-            .then(entrenador => {
-                document.getElementById("nombre").value = entrenador.nombre;
-                document.getElementById("apellido").value = entrenador.apellido;
-                document.getElementById("edad").value = entrenador.edad;
-                document.getElementById("nacionalidad").value = entrenador.nacionalidad;
-            });
+    fetch(`/api/entrenadores/${id}`)
+      .then(res => res.json())
+      .then(entrenador => {
+        document.getElementById("nombre").value = entrenador.nombre;
+        document.getElementById("apellido").value = entrenador.apellido;
+        document.getElementById("edad").value = entrenador.edad;
+        document.getElementById("nacionalidad").value = entrenador.nacionalidad;
+      });
 
-        document.getElementById("form-editar").addEventListener("submit", function(event) {
-            event.preventDefault();
+    document.getElementById("form-editar").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-            const entrenadorActualizado = {
-                nombre: document.getElementById("nombre").value,
-                apellido: document.getElementById("apellido").value,
-                edad: parseInt(document.getElementById("edad").value),
-                nacionalidad: document.getElementById("nacionalidad").value
-            };
+      const entrenadorActualizado = {
+        edad: parseInt(document.getElementById("edad").value),
+        nacionalidad: document.getElementById("nacionalidad").value
+      };
 
-            fetch(`/api/entrenadores/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(entrenadorActualizado)
-            })
-            .then(res => res.ok ? alert("Entrenador actualizado con éxito") : alert("Error al actualizar"))
-            .then(() => window.location.href = "listar_entrenadores.html");
-        });
-    </script>
+      fetch(`/api/entrenadores/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entrenadorActualizado)
+      })
+      .then(res => res.ok ? alert("Entrenador actualizado con éxito") : alert("Error al actualizar"))
+      .then(() => window.location.href = "listar_entrenadores.html");
+    });
+  </script>
 </body>
 </html>
 

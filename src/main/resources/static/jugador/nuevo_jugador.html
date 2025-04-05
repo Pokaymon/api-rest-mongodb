@@ -1,76 +1,173 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Registrar Jugador</title>
+  <meta charset="UTF-8" />
+  <title>Registrar Jugador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--azul), var(--rojo));
+      color: var(--blanco);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--blanco);
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: black;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+      max-width: 600px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    .btn-enviar {
+      background-color: var(--amarillo);
+      color: black;
+      font-weight: bold;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+    }
+
+    .btn-enviar:hover {
+      background-color: var(--blanco);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 2rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>Registrar Jugador</h1>
+
+  <header>
+    <div class="d-flex align-items-center">
+    <!-- <img src="/img/icon.jpeg" alt="Logo Mundial 2026" class="logo" /> -->
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="listar_jugadores.html" class="btn btn-light"><i class="fas fa-arrow-left"></i> Volver</a>
+  </header>
+
+  <div class="container">
+    <h2 class="mb-4 text-center"><i class="fas fa-user-plus"></i> Registrar Jugador</h2>
     <form id="form-nuevo">
-        <label>Nombre:</label>
-        <input type="text" id="nombre" required><br><br>
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" class="form-control" id="nombre" required />
+      </div>
 
-        <label>Apellido:</label>
-        <input type="text" id="apellido" required><br><br>
+      <div class="mb-3">
+        <label for="apellido" class="form-label">Apellido:</label>
+        <input type="text" class="form-control" id="apellido" required />
+      </div>
 
-        <label>Dorsal:</label>
-        <input type="number" id="dorsal" required><br><br>
+      <div class="mb-3">
+        <label for="dorsal" class="form-label">Dorsal:</label>
+        <input type="number" class="form-control" id="dorsal" required />
+      </div>
 
-        <label>Posición:</label>
-        <input type="text" id="posicion" required><br><br>
+      <div class="mb-3">
+        <label for="posicion" class="form-label">Posición:</label>
+        <input type="text" class="form-control" id="posicion" required />
+      </div>
 
-        <label>Club:</label>
-        <select id="club" required>
-            <option value="">Seleccione un club</option>
-        </select><br><br>
+      <div class="mb-3">
+        <label for="club" class="form-label">Club:</label>
+        <select class="form-select" id="club" required>
+          <option value="">Seleccione un club</option>
+        </select>
+      </div>
 
-        <button type="submit">Guardar</button>
+      <button type="submit" class="btn btn-enviar w-100"><i class="fas fa-save"></i> Guardar</button>
     </form>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/jugador/listar_jugadores.html'">
-        Regresar
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        fetch('/api/clubes')
-            .then(res => res.json())
-            .then(clubes => {
-                const select = document.getElementById('club');
-                clubes.forEach(club => {
-                    const option = document.createElement('option');
-                    option.value = club.id;
-                    option.textContent = club.nombre;
-                    select.appendChild(option);
-                });
-            });
-
-        document.getElementById("form-nuevo").addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const nuevoJugador = {
-                nombre: document.getElementById("nombre").value,
-                apellido: document.getElementById("apellido").value,
-                dorsal: parseInt(document.getElementById("dorsal").value),
-                posicion: document.getElementById("posicion").value,
-                club: { id: document.getElementById("club").value }
-            };
-
-            fetch('/api/jugadores', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nuevoJugador)
-            })
-            .then(res => {
-                if (res.ok) {
-                    alert("Jugador registrado con éxito");
-                    document.getElementById("form-nuevo").reset();
-		    window.location.href = "listar_jugadores.html";
-                } else {
-                    alert("Error al registrar jugador");
-                }
-            });
+  <script>
+    fetch('/api/clubes')
+      .then(res => res.json())
+      .then(clubes => {
+        const select = document.getElementById('club');
+        clubes.forEach(club => {
+          const option = document.createElement('option');
+          option.value = club.id;
+          option.textContent = club.nombre;
+          select.appendChild(option);
         });
-    </script>
+      });
+
+    document.getElementById("form-nuevo").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const nuevoJugador = {
+        nombre: document.getElementById("nombre").value,
+        apellido: document.getElementById("apellido").value,
+        dorsal: parseInt(document.getElementById("dorsal").value),
+        posicion: document.getElementById("posicion").value,
+        club: { id: document.getElementById("club").value }
+      };
+
+      fetch('/api/jugadores', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoJugador)
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("Jugador registrado con éxito");
+          document.getElementById("form-nuevo").reset();
+          window.location.href = "listar_jugadores.html";
+        } else {
+          alert("Error al registrar jugador");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 

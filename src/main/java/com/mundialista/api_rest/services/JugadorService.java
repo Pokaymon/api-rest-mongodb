@@ -61,16 +61,6 @@ public class JugadorService {
     // Actualizar un jugador existente
     public Jugador actualizarJugador(String id, Jugador jugador) {
 
-        // Verificar si ya existe un jugador con el mismo nombre y apellido
-        Optional<Jugador> jugadorExistente = jugadorRepository.findByNombreAndApellido(
-            jugador.getNombre().trim(),
-            jugador.getApellido().trim()
-        );
-
-        if (jugadorExistente.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Ya existe un jugador con ese nombre y apellido");
-        }
-
         Optional<Jugador> jugadorExistenteOpt = jugadorRepository.findById(id);
 
         if (jugadorExistenteOpt.isEmpty()) {
@@ -79,11 +69,14 @@ public class JugadorService {
 
         Jugador jugadorExistente = jugadorExistenteOpt.get();
 
-        // Actualizar campos básicos
-        jugadorExistente.setNombre(jugador.getNombre());
-        jugadorExistente.setApellido(jugador.getApellido());
-        jugadorExistente.setDorsal(jugador.getDorsal());
-        jugadorExistente.setPosicion(jugador.getPosicion());
+        // Solo si son datos nuevos
+	if (jugador.getDorsal() != null) {
+            jugadorExistente.setDorsal(jugador.getDorsal());
+        }
+
+        if (jugador.getPosicion() != null) {
+            jugadorExistente.setPosicion(jugador.getPosicion());
+        }
 
         // Verificar y actualizar el club (si no viene null)
         if (jugador.getClub() != null && jugador.getClub().getId() != null) {
