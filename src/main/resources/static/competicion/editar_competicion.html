@@ -1,70 +1,160 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Editar Competición</title>
+  <meta charset="UTF-8">
+  <title>Editar Competición</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--azul), var(--rojo));
+      color: var(--blanco);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--blanco);
+    }
+
+    .container {
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.95);
+      color: black;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem auto;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-actualizar {
+      background-color: var(--amarillo);
+      color: black;
+      font-weight: bold;
+      border-radius: 20px;
+    }
+
+    .btn-actualizar:hover {
+      background-color: var(--blanco);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 2rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>Editar Competición</h1>
+
+  <header>
+    <div class="d-flex align-items-center">
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="index.html" class="btn btn-light"><i class="fas fa-home"></i> Inicio</a>
+  </header>
+
+  <div class="container">
+    <h2 class="text-center mb-4"><i class="fas fa-pen-to-square"></i> Editar Competición</h2>
+
     <form id="formEditarCompeticion">
-        <input type="hidden" name="id">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br><br>
+      <input type="hidden" name="id">
 
-        <label>Fecha Inicio:</label>
-        <input type="date" name="fechaInicio" required><br><br>
+      <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" name="nombre" class="form-control" required>
+      </div>
 
-        <label>Fecha Fin:</label>
-        <input type="date" name="fechaFin" required><br><br>
+      <div class="mb-3">
+        <label class="form-label">Fecha Inicio:</label>
+        <input type="date" name="fechaInicio" class="form-control" required>
+      </div>
 
-        <label>Monto Premio:</label>
-        <input type="number" name="montoPremio" step="0.01" required><br><br>
+      <div class="mb-3">
+        <label class="form-label">Fecha Fin:</label>
+        <input type="date" name="fechaFin" class="form-control" required>
+      </div>
 
-        <button type="submit">Actualizar</button>
+      <div class="mb-3">
+        <label class="form-label">Monto Premio:</label>
+        <input type="number" name="montoPremio" step="0.01" class="form-control" required>
+      </div>
+
+      <button type="submit" class="btn btn-actualizar w-100"><i class="fas fa-save"></i> Actualizar</button>
     </form>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/competicion/listar_competiciones.html'">
-        Regresar
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
 
-        fetch(`/api/competiciones/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                const form = document.getElementById('formEditarCompeticion');
-                form.id.value = data.id;
-                form.nombre.value = data.nombre;
-                form.fechaInicio.value = data.fechaInicio.split('T')[0];
-                form.fechaFin.value = data.fechaFin.split('T')[0];
-                form.montoPremio.value = data.montoPremio;
-            });
+    fetch(`/api/competiciones/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        const form = document.getElementById('formEditarCompeticion');
+        form.id.value = data.id;
+        form.nombre.value = data.nombre;
+        form.fechaInicio.value = data.fechaInicio.split('T')[0];
+        form.fechaFin.value = data.fechaFin.split('T')[0];
+        form.montoPremio.value = data.montoPremio;
+      });
 
-        document.getElementById('formEditarCompeticion').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = e.target;
-            const competicion = {
-                id: form.id.value,
-                nombre: form.nombre.value,
-                fechaInicio: form.fechaInicio.value,
-                fechaFin: form.fechaFin.value,
-                montoPremio: parseFloat(form.montoPremio.value)
-            };
+    document.getElementById('formEditarCompeticion').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const competicion = {
+        id: form.id.value,
+        nombre: form.nombre.value,
+        fechaInicio: form.fechaInicio.value,
+        fechaFin: form.fechaFin.value,
+        montoPremio: parseFloat(form.montoPremio.value)
+      };
 
-            fetch(`/api/competiciones/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(competicion)
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert('Competición actualizada con éxito');
-                window.location.href = "listar_competiciones.html";
-            });
-        });
-    </script>
+      fetch(`/api/competiciones/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(competicion)
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert('Competición actualizada con éxito');
+        window.location.href = "listar_competiciones.html";
+      });
+    });
+  </script>
 </body>
 </html>
 

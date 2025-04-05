@@ -1,66 +1,176 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Lista de Competiciones</title>
+  <meta charset="UTF-8" />
+  <title>Lista de Competiciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --azul: #002D62;
+      --rojo: #CE1126;
+      --amarillo: #FFD700;
+      --blanco: #FFFFFF;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--azul), var(--rojo));
+      color: var(--blanco);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--amarillo);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--amarillo);
+      margin-right: 10px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--blanco);
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: black;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+      max-width: 95%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--azul), var(--rojo));
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-top: 3px solid var(--amarillo);
+      margin-top: 2rem;
+    }
+
+    .btn-nuevo {
+      background-color: var(--amarillo);
+      color: black;
+      font-weight: bold;
+      border-radius: 15px;
+    }
+
+    .btn-nuevo:hover {
+      background-color: var(--blanco);
+    }
+
+    table {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    th {
+      background-color: var(--amarillo);
+      color: black;
+    }
+
+    td, th {
+      vertical-align: middle !important;
+    }
+
+    .btn-sm {
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Competiciones Registradas</h1>
-    <a href="nueva_competicion.html">Agregar Nueva Competicion</a>
-    <table border="1">
+
+  <header>
+    <div class="d-flex align-items-center">
+      <span class="title">MUNDIAL 2026</span>
+    </div>
+    <a href="/" class="btn btn-light"><i class="fas fa-home"></i> Inicio</a>
+  </header>
+
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0"><i class="fas fa-trophy"></i> Competiciones Registradas</h2>
+      <a href="nueva_competicion.html" class="btn btn-nuevo">
+        <i class="fas fa-plus-circle"></i> Nueva Competición
+      </a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered align-middle">
         <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>Monto Premio</th>
-                <th>Acciones</th>
-            </tr>
+          <tr>
+            <th>Nombre</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Monto Premio</th>
+            <th>Acciones</th>
+          </tr>
         </thead>
         <tbody id="tablaCompeticiones"></tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 
-    <button onclick="window.location.href='https://mundialista.ddnsfree.com:8129/'">
-        Volver al Inicio
-    </button>
+  <footer>
+    <p>&copy; 2026 FIFA World Cup™ - Todos los derechos reservados</p>
+  </footer>
 
-    <script>
-        function cargarCompeticiones() {
-            fetch('/api/competiciones')
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('tablaCompeticiones');
-                    tbody.innerHTML = '';
-                    data.forEach(c => {
-                        const fila = `
-                            <tr>
-                                <td>${c.nombre}</td>
-                                <td>${new Date(c.fechaInicio).toLocaleDateString()}</td>
-                                <td>${new Date(c.fechaFin).toLocaleDateString()}</td>
-                                <td>${c.montoPremio}</td>
-                                <td>
-                                    <a href="editar_competicion.html?id=${c.id}">Editar</a>
-                                    <button onclick="eliminar('${c.id}')">Eliminar</button>
-                                </td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += fila;
-                    });
-                });
-        }
+  <script>
+    function cargarCompeticiones() {
+      fetch('/api/competiciones')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('tablaCompeticiones');
+          tbody.innerHTML = '';
+          data.forEach(c => {
+            const fila = `
+              <tr>
+                <td>${c.nombre}</td>
+                <td>${new Date(c.fechaInicio).toLocaleDateString()}</td>
+                <td>${new Date(c.fechaFin).toLocaleDateString()}</td>
+                <td>$${c.montoPremio.toLocaleString()}</td>
+                <td>
+                  <a href="editar_competicion.html?id=${c.id}" class="btn btn-sm btn-warning btn-accion">
+                    <i class="fas fa-edit"></i> Editar
+                  </a>
+                  <button onclick="eliminar('${c.id}')" class="btn btn-sm btn-danger btn-accion">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                  </button>
+                </td>
+              </tr>
+            `;
+            tbody.innerHTML += fila;
+          });
+        });
+    }
 
-        function eliminar(id) {
-            if (confirm("¿Seguro que quieres eliminar esta competición?")) {
-                fetch(`/api/competiciones/${id}`, { method: 'DELETE' })
-                    .then(() => {
-                        alert('Eliminado correctamente');
-                        cargarCompeticiones();
-                    });
-            }
-        }
+    function eliminar(id) {
+      if (confirm("¿Seguro que quieres eliminar esta competición?")) {
+        fetch(`/api/competiciones/${id}`, { method: 'DELETE' })
+          .then(() => {
+            alert('Eliminado correctamente');
+            cargarCompeticiones();
+          });
+      }
+    }
 
-        window.onload = cargarCompeticiones;
-    </script>
+    window.onload = cargarCompeticiones;
+  </script>
+
 </body>
 </html>
 

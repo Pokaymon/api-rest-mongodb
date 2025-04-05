@@ -4,6 +4,8 @@ import com.mundialista.api_rest.models.Competicion;
 import com.mundialista.api_rest.repositories.CompeticionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +27,20 @@ public class CompeticionService {
 
     // Crear una nueva competicion
     public Competicion crearCompeticion(Competicion competicion) {
+        Optional<Competicion> existente = competicionRepository.findByNombreIgnoreCase(competicion.getNombre().trim());
+        if (existente.isPresent()) {
+           throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una competición con ese nombre");
+        }
         return competicionRepository.save(competicion);
     }
 
     // Actualizar una competicion existente
     public Competicion actualizarCompeticion(String id, Competicion competicion) {
+        Optional<Competicion> existente = competicionRepository.findByNombreIgnoreCase(competicion.getNombre().trim());
+        if (existente.isPresent() && !existente.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otra competición con ese nombre");
+        }
+
         competicion.setId(id);
         return competicionRepository.save(competicion);
     }
