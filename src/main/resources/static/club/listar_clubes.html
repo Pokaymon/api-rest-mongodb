@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Clubes</title>
+</head>
+<body>
+    <h1>Listado de Clubes</h1>
+    <a href="nuevo_club.html">Registrar nuevo Club</a>
+    <br><br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Entrenador</th>
+                <th>Asociación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-clubes"></tbody>
+    </table>
+
+    <script>
+        async function cargarClubes() {
+            const response = await fetch("/api/clubes");
+            const clubes = await response.json();
+            const tabla = document.getElementById("tabla-clubes");
+
+            clubes.forEach(club => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${club.nombre}</td>
+                    <td>${club.entrenador?.nombre || 'Sin entrenador'}</td>
+                    <td>${club.asociacion?.nombre || 'Sin asociación'}</td>
+                    <td>
+                        <a href="editar_club.html?id=${club.id}">Editar</a> |
+                        <button onclick="eliminarClub('${club.id}')">Eliminar</button>
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
+        }
+
+        async function eliminarClub(id) {
+            if (!confirm("¿Estás seguro de eliminar este club?")) return;
+
+            const response = await fetch(`/api/clubes/${id}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                alert("Club eliminado.");
+                location.reload();
+            } else {
+                alert("Error al eliminar el club.");
+            }
+        }
+
+        cargarClubes();
+    </script>
+</body>
+</html>
+

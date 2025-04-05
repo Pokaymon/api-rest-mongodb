@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Club</title>
+</head>
+<body>
+    <h1>Registrar nuevo Club</h1>
+
+    <form id="formulario-club">
+        <label>Nombre del Club:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label>ID del Entrenador:</label>
+        <input type="text" id="entrenadorId" required><br><br>
+
+        <label>ID de la Asociación:</label>
+        <input type="text" id="asociacionId" required><br><br>
+
+        <button type="submit">Guardar Club</button>
+    </form>
+
+    <script>
+        document.getElementById("formulario-club").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const club = {
+                nombre: document.getElementById("nombre").value,
+                entrenador: { id: document.getElementById("entrenadorId").value },
+                asociacion: { id: document.getElementById("asociacionId").value }
+            };
+
+            const response = await fetch("/api/clubes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(club)
+            });
+
+            if (response.ok) {
+                alert("Club creado correctamente.");
+                window.location.href = "listar_clubes.html";
+            } else {
+                alert("Error al crear el club.");
+            }
+        });
+    </script>
+</body>
+</html>
+

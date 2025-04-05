@@ -6,102 +6,78 @@
 </head>
 <body>
     <h1>Editar Jugador</h1>
+    <form id="form-editar">
+        <label>Nombre:</label>
+        <input type="text" id="nombre"><br><br>
 
-    <form id="jugadorForm">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" required><br><br>
+        <label>Apellido:</label>
+        <input type="text" id="apellido"><br><br>
 
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" required><br><br>
+        <label>Dorsal:</label>
+        <input type="number" id="dorsal"><br><br>
 
-        <label for="dorsal">Dorsal:</label>
-        <input type="number" id="dorsal" required><br><br>
+        <label>Posición:</label>
+        <input type="text" id="posicion"><br><br>
 
-        <label for="posicion">Posición:</label>
-        <input type="text" id="posicion" required><br><br>
-
-        <label for="club">Club:</label>
-        <select id="club" required>
+        <label>Club:</label>
+        <select id="club">
             <option value="">Seleccione un club</option>
         </select><br><br>
 
-        <button type="submit">Actualizar Jugador</button>
+        <button type="submit">Actualizar</button>
     </form>
 
-<script>
-    const jugadorId = new URLSearchParams(window.location.search).get('id'); // ID desde la URL
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
 
-    if (!jugadorId) {
-        alert('No se proporcionó un ID de jugador.');
-        window.location.href = '/'; // redirige si no hay ID
-    }
-
-    // 1. Cargar clubes
-    fetch('/api/clubes')
-        .then(res => res.json())
-        .then(clubes => {
-            const select = document.getElementById('club');
-            clubes.forEach(club => {
-                const option = document.createElement('option');
-                option.value = club.id;
-                option.textContent = club.nombre;
-                select.appendChild(option);
+        fetch('/api/clubes')
+            .then(res => res.json())
+            .then(clubes => {
+                const select = document.getElementById('club');
+                clubes.forEach(club => {
+                    const option = document.createElement('option');
+                    option.value = club.id;
+                    option.textContent = club.nombre;
+                    select.appendChild(option);
+                });
+                return fetch(`/api/jugadores/${id}`);
+            })
+            .then(res => res.json())
+            .then(jugador => {
+                document.getElementById("nombre").value = jugador.nombre;
+                document.getElementById("apellido").value = jugador.apellido;
+                document.getElementById("dorsal").value = jugador.dorsal;
+                document.getElementById("posicion").value = jugador.posicion;
+                document.getElementById("club").value = jugador.club?.id || '';
             });
 
-            // 2. Luego de cargar clubes, cargar datos del jugador
-            return fetch(`/api/jugadores/${jugadorId}`);
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('Jugador no encontrado');
-            return res.json();
-        })
-        .then(jugador => {
-            document.getElementById('nombre').value = jugador.nombre;
-            document.getElementById('apellido').value = jugador.apellido;
-            document.getElementById('dorsal').value = jugador.dorsal;
-            document.getElementById('posicion').value = jugador.posicion;
-            document.getElementById('club').value = jugador.club?.id || '';
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Error al cargar los datos del jugador');
+        document.getElementById("form-editar").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const jugadorActualizado = {
+                nombre: document.getElementById("nombre").value,
+                apellido: document.getElementById("apellido").value,
+                dorsal: parseInt(document.getElementById("dorsal").value),
+                posicion: document.getElementById("posicion").value,
+                club: { id: document.getElementById("club").value }
+            };
+
+            fetch(`/api/jugadores/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(jugadorActualizado)
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("Jugador actualizado con éxito");
+                    window.location.href = "/jugador/listar_jugadores.html";
+                } else {
+                    alert("Error al actualizar el jugador");
+                }
+            });
         });
-
-    // 3. Enviar actualización
-    document.getElementById('jugadorForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const data = {
-            nombre: document.getElementById('nombre').value,
-            apellido: document.getElementById('apellido').value,
-            dorsal: parseInt(document.getElementById('dorsal').value),
-            posicion: document.getElementById('posicion').value,
-            club: {
-                id: document.getElementById('club').value
-            }
-        };
-
-        fetch(`/api/jugadores/${jugadorId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('Error al actualizar');
-            return res.json();
-        })
-        .then(jugador => {
-            alert('Jugador actualizado exitosamente');
-            window.location.href = '/jugador/listar_jugadores.html'; // redirige si quieres
-        })
-        .catch(err => {
-            console.error(err);
-            alert('No se pudo actualizar el jugador');
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
 

@@ -1,12 +1,49 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .botones a {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            width: 300px;
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .botones a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h1 th:text="${mensaje}">Bienvenido</h1>
+
+    <div class="botones">
+        <a href="/jugador/listar_jugadores.html">Jugadores</a>
+        <a href="/entrenador/listar_entrenadores.html">Entrenadores</a>
+        <a href="/competicion/listar_competiciones.html">Competiciones</a>
+        <a href="/asociacion/listar_asociaciones.html">Asociaciones</a>
+        <a href="/club/listar_clubes.html">Clubes</a>
+        <a href="/clubes_competiciones/listar_clubes_competiciones.html">Asociar Club a Competición</a>
+        <a href="/clubes_jugadores/listar_clubes_jugadores.html">Asociar Jugador a Club</a>
+    </div>
 </body>
 </html>
 

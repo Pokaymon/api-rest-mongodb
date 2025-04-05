@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Asociación</title>
+</head>
+<body>
+    <h1>Registrar Nueva Asociación</h1>
+    <form id="form-asociacion">
+        <label>Nombre:</label>
+        <input type="text" id="nombre" required><br>
+
+        <label>País:</label>
+        <input type="text" id="pais" required><br>
+
+        <label>Presidente:</label>
+        <input type="text" id="presidente" required><br>
+
+        <label>Siglas:</label>
+        <input type="text" id="siglas" required><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        document.getElementById('form-asociacion').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                nombre: document.getElementById('nombre').value,
+                pais: document.getElementById('pais').value,
+                presidente: document.getElementById('presidente').value,
+                siglas: document.getElementById('siglas').value
+            };
+
+            fetch('/api/asociaciones', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("No se pudo crear la asociación.");
+                return response.json();
+            })
+            .then(data => {
+                alert("Asociación registrada correctamente");
+                window.location.href = "listar_asociaciones.html";
+            })
+            .catch(error => alert(error.message));
+        });
+    </script>
+</body>
+</html>
+

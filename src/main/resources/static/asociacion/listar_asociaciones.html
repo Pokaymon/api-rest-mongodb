@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asociaciones</title>
+</head>
+<body>
+    <h1>Lista de Asociaciones</h1>
+    <a href="nueva_asociacion.html">+ Nueva Asociación</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>País</th>
+                <th>Presidente</th>
+                <th>Siglas</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-asociaciones"></tbody>
+    </table>
+
+    <script>
+        fetch('/api/asociaciones')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('tabla-asociaciones');
+                data.forEach(asociacion => {
+                    const fila = `
+                        <tr>
+                            <td>${asociacion.nombre}</td>
+                            <td>${asociacion.pais}</td>
+                            <td>${asociacion.presidente}</td>
+                            <td>${asociacion.siglas}</td>
+                            <td>
+                                <a href="editar_asociacion.html?id=${asociacion.id}">Editar</a> |
+                                <button onclick="eliminar('${asociacion.id}')">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += fila;
+                });
+            });
+
+        function eliminar(id) {
+            if (confirm("¿Estás seguro de eliminar esta asociación?")) {
+                fetch(`/api/asociaciones/${id}`, { method: 'DELETE' })
+                    .then(res => {
+                        if (!res.ok) throw new Error("Error al eliminar");
+                        alert("Asociación eliminada");
+                        location.reload();
+                    })
+                    .catch(err => alert(err.message));
+            }
+        }
+    </script>
+</body>
+</html>
+

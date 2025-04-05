@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Club</title>
+</head>
+<body>
+    <h1>Editar Club</h1>
+
+    <form id="formulario-editar-club">
+        <label>Nombre del Club:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label>ID del Entrenador:</label>
+        <input type="text" id="entrenadorId" required><br><br>
+
+        <label>ID de la Asociación:</label>
+        <input type="text" id="asociacionId" required><br><br>
+
+        <button type="submit">Actualizar Club</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        async function cargarClub() {
+            const response = await fetch(`/api/clubes/${id}`);
+            if (response.ok) {
+                const club = await response.json();
+                document.getElementById("nombre").value = club.nombre;
+                document.getElementById("entrenadorId").value = club.entrenador?.id || "";
+                document.getElementById("asociacionId").value = club.asociacion?.id || "";
+            } else {
+                alert("Club no encontrado.");
+                window.location.href = "listar_clubes.html";
+            }
+        }
+
+        document.getElementById("formulario-editar-club").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const clubActualizado = {
+                nombre: document.getElementById("nombre").value,
+                entrenador: { id: document.getElementById("entrenadorId").value },
+                asociacion: { id: document.getElementById("asociacionId").value }
+            };
+
+            const response = await fetch(`/api/clubes/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(clubActualizado)
+            });
+
+            if (response.ok) {
+                alert("Club actualizado correctamente.");
+                window.location.href = "listar_clubes.html";
+            } else {
+                alert("Error al actualizar el club.");
+            }
+        });
+
+        cargarClub();
+    </script>
+</body>
+</html>
+

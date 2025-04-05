@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Asociación</title>
+</head>
+<body>
+    <h1>Editar Asociación</h1>
+    <form id="form-editar">
+        <label>Nombre:</label>
+        <input type="text" id="nombre" required><br>
+
+        <label>País:</label>
+        <input type="text" id="pais" required><br>
+
+        <label>Presidente:</label>
+        <input type="text" id="presidente" required><br>
+
+        <label>Siglas:</label>
+        <input type="text" id="siglas" required><br>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        fetch(`/api/asociaciones/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('nombre').value = data.nombre;
+                document.getElementById('pais').value = data.pais;
+                document.getElementById('presidente').value = data.presidente;
+                document.getElementById('siglas').value = data.siglas;
+            });
+
+        document.getElementById('form-editar').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                nombre: document.getElementById('nombre').value,
+                pais: document.getElementById('pais').value,
+                presidente: document.getElementById('presidente').value,
+                siglas: document.getElementById('siglas').value
+            };
+
+            fetch(`/api/asociaciones/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Error al actualizar");
+                alert("Asociación actualizada correctamente");
+                window.location.href = "listar_asociaciones.html";
+            })
+            .catch(err => alert(err.message));
+        });
+    </script>
+</body>
+</html>
+

@@ -27,6 +27,7 @@
 </head>
 <body>
     <h1>Jugadores Registrados</h1>
+    <a href="nuevo_jugador.html">Agregar Nuevo Jugador</a>
     <table id="tablaJugadores">
         <thead>
             <tr>
@@ -43,58 +44,50 @@
         </tbody>
     </table>
 
-<script>
-    const URL_BASE = 'https://mundialista.ddnsfree.com:8129';
+    <script>
+        const URL_BASE = 'https://mundialista.ddnsfree.com:8129';
 
-    // Cargar los jugadores desde la API
-    fetch('/api/jugadores')
-        .then(res => res.json())
-        .then(jugadores => {
-            const tbody = document.querySelector('#tablaJugadores tbody');
-            jugadores.forEach(j => {
-                const tr = document.createElement('tr');
-
-                tr.innerHTML = `
-                    <td>${j.nombre}</td>
-                    <td>${j.apellido}</td>
-                    <td>${j.dorsal}</td>
-                    <td>${j.posicion}</td>
-                    <td>${j.club?.nombre || 'Sin club'}</td>
-                    <td>
-                        <button onclick="editarJugador('${j.id}')">Editar</button>
-                        <button onclick="eliminarJugador('${j.id}')">Eliminar</button>
-                    </td>
-                `;
-
-                tbody.appendChild(tr);
+        fetch('/api/jugadores')
+            .then(res => res.json())
+            .then(jugadores => {
+                const tbody = document.querySelector('#tablaJugadores tbody');
+                jugadores.forEach(j => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${j.nombre}</td>
+                        <td>${j.apellido}</td>
+                        <td>${j.dorsal}</td>
+                        <td>${j.posicion}</td>
+                        <td>${j.club?.nombre || 'Sin club'}</td>
+                        <td>
+                            <button onclick="editarJugador('${j.id}')">Editar</button>
+                            <button onclick="eliminarJugador('${j.id}')">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             });
-        })
-        .catch(err => {
-            console.error('Error al cargar jugadores:', err);
-            alert('No se pudieron cargar los jugadores.');
-        });
 
-    function editarJugador(id) {
-        window.location.href = `${URL_BASE}/jugador/editar_jugador.html?id=${id}`;
-    }
+        function editarJugador(id) {
+            window.location.href = `${URL_BASE}/jugador/editar_jugador.html?id=${id}`;
+        }
 
-    function eliminarJugador(id) {
-        if (!confirm('¿Estás seguro de que deseas eliminar este jugador?')) return;
+        function eliminarJugador(id) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este jugador?')) return;
 
-        fetch(`/api/jugadores/${id}`, {
-            method: 'DELETE'
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('Error al eliminar el jugador');
-            alert('Jugador eliminado correctamente');
-            location.reload();
-        })
-        .catch(err => {
-            console.error(err);
-            alert('No se pudo eliminar el jugador.');
-        });
-    }
-</script>
+            fetch(`/api/jugadores/${id}`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert('Jugador eliminado correctamente');
+                    location.reload();
+                } else {
+                    alert('No se pudo eliminar el jugador.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 

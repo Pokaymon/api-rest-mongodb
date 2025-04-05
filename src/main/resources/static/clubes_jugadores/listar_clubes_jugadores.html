@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relaciones Clubes - Jugadores</title>
+</head>
+<body>
+  <h1>Relaciones Clubes - Jugadores</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID Relación</th>
+        <th>Club</th>
+        <th>Jugador</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-relaciones"></tbody>
+  </table>
+
+  <script>
+    fetch("/api/clubes_jugadores")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("tabla-relaciones");
+        data.forEach(rel => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${rel.id}</td>
+            <td>${rel.club.nombre || rel.club.id}</td>
+            <td>${rel.jugador.nombre || rel.jugador.id}</td>
+            <td>
+              <button onclick="editar('${rel.id}', '${rel.club.id}', '${rel.jugador.id}')">Editar</button>
+              <button onclick="eliminar('${rel.id}')">Eliminar</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+
+    function eliminar(id) {
+      if (confirm("¿Estás seguro de eliminar esta relación?")) {
+        fetch(`/api/clubes_jugadores/${id}`, {
+          method: "DELETE"
+        })
+          .then(() => location.reload())
+          .catch(err => alert("Error al eliminar"));
+      }
+    }
+
+    function editar(id, clubId, jugadorId) {
+      window.location.href = `editar_club_jugador.html?id=${id}&clubId=${clubId}&jugadorId=${jugadorId}`;
+    }
+  </script>
+</body>
+</html>
+

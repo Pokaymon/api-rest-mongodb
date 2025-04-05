@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clubes-Competiciones</title>
+</head>
+<body>
+    <h1>Relaciones Club - Competición</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Relación</th>
+                <th>Nombre del Club</th>
+                <th>Nombre de la Competición</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-relaciones"></tbody>
+    </table>
+
+    <script>
+        fetch('/api/clubes_competiciones')
+            .then(res => res.json())
+            .then(data => {
+                const tabla = document.getElementById('tabla-relaciones');
+                tabla.innerHTML = '';
+
+                data.forEach(relacion => {
+                    const fila = `
+                        <tr>
+                            <td>${relacion.id}</td>
+                            <td>${relacion.club.nombre || 'ID: ' + relacion.club.id}</td>
+                            <td>${relacion.competicion.nombre || 'ID: ' + relacion.competicion.id}</td>
+                            <td>
+                                <a href="editar_club_competicion.html?id=${relacion.id}">Editar</a> |
+                                <button onclick="eliminar('${relacion.id}')">Eliminar</button>
+                            </td>
+                        </tr>`;
+                    tabla.innerHTML += fila;
+                });
+            });
+
+        function eliminar(id) {
+            if (confirm('¿Estás seguro de eliminar esta relación?')) {
+                fetch(`/api/clubes_competiciones/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(() => location.reload())
+                .catch(err => console.error('Error al eliminar:', err));
+            }
+        }
+    </script>
+</body>
+</html>
+
