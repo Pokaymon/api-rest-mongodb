@@ -45,6 +45,27 @@ public class ClubesCompeticionesService {
         return clubesCompeticionesRepository.save(nuevaRelacion);
     }
 
+    public ClubesCompeticiones actualizarRelacion(String id, String nuevoClubId, String nuevaCompeticionId) {
+        ClubesCompeticiones existente = clubesCompeticionesRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Relación no encontrada"));
+
+        Optional<ClubesCompeticiones> duplicado = clubesCompeticionesRepository.findByClubIdAndCompeticionId(nuevoClubId, nuevaCompeticionId);
+        if (duplicado.isPresent() && !duplicado.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una relación con ese club y competición");
+        }
+
+        Club nuevoClub = clubRepository.findById(nuevoClubId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Club no encontrado"));
+
+        Competicion nuevaCompeticion = competicionRepository.findById(nuevaCompeticionId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competición no encontrada"));
+
+        existente.setClub(nuevoClub);
+        existente.setCompeticion(nuevaCompeticion);
+
+        return clubesCompeticionesRepository.save(existente);
+    }
+
 
     public ClubesCompeticiones obtenerPorId(String id) {
         return clubesCompeticionesRepository.findById(id).orElse(null);

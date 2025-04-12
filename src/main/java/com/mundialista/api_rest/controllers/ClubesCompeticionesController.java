@@ -33,6 +33,14 @@ public class ClubesCompeticionesController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ClubesCompeticiones> actualizarRelacion(
+            @PathVariable String id,
+            @RequestParam String clubId,
+            @RequestParam String competicionId) {
+        return ResponseEntity.ok(clubesCompeticionesService.actualizarRelacion(id, clubId, competicionId));
+    }
+
     // Obtener todas las relaciones
     @GetMapping
     public ResponseEntity<List<ClubesCompeticiones>> obtenerTodas() {
